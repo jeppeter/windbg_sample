@@ -223,7 +223,7 @@ ExtCommandDesc::ExtCommandDesc(_In_ PCSTR Name,
 
     if (strlen(Name) > s_LongestCommandName)
     {
-        s_LongestCommandName = strlen(Name);
+        s_LongestCommandName = (ULONG) strlen(Name);
     }
 }
 
@@ -1206,7 +1206,7 @@ ExtExtension::OutWrapStr(_In_ PCSTR String)
 {
     if (m_TestWrap)
     {
-        m_TestWrapChars += strlen(String);
+        m_TestWrapChars += (ULONG) strlen(String);
         return;
     }
     
@@ -1309,7 +1309,7 @@ ExtExtension::CopyCircleString(_In_ PCSTR Str)
     PSTR Buf;
     ULONG Chars;
     
-    Chars = strlen(Str) + 1;
+    Chars = (ULONG) strlen(Str) + 1;
     Buf = RequestCircleString(Chars);
     memcpy(Buf, Str, Chars * sizeof(*Str));
     return Buf;
@@ -1350,7 +1350,7 @@ ExtExtension::AppendBufferString(_In_ PCSTR Str)
 {
     ULONG Chars;
     
-    Chars = strlen(Str) + 1;
+    Chars = (ULONG)strlen(Str) + 1;
     if (Chars > m_AppendBufferChars ||
         (ULONG_PTR)(m_AppendAt - m_AppendBuffer) > m_AppendBufferChars - Chars)
     {
@@ -1791,7 +1791,7 @@ ExtExtension::CallDebuggeeBase(_In_ PCSTR CommandString,
     ExtCaptureOutputA IgnoreOut;
 
     Cmd.Copy(".call ", 6);
-    Cmd.Append(CommandString, strlen(CommandString) + 1);
+    Cmd.Append(CommandString, (ULONG)strlen(CommandString) + 1);
 
     if (FAILED(Status = m_Control->
                Execute(DEBUG_OUTCTL_IGNORE,
@@ -2621,7 +2621,7 @@ ExtExtension::HandleKnownStruct(_In_ PDEBUG_CLIENT Client,
         Status = S_OK;
         while (Struct && Struct->TypeName)
         {
-            ULONG Chars = strlen(Struct->TypeName) + 1;
+            ULONG Chars = (ULONG)strlen(Struct->TypeName) + 1;
             CharsNeeded += Chars;
             
             if (Status != S_OK || *BufferChars < Chars)
@@ -2721,7 +2721,7 @@ ExtExtension::HandleQueryValueNames(_In_ PDEBUG_CLIENT Client,
     Status = S_OK;
     while (ExtVal && ExtVal->ValueName)
     {
-        ULONG Chars = wcslen(ExtVal->ValueName) + 1;
+        ULONG Chars = (ULONG)wcslen(ExtVal->ValueName) + 1;
         CharsNeeded += Chars;
             
         if (Status != S_OK || BufferChars < Chars)
@@ -3627,7 +3627,7 @@ ExtExtension::HelpAll(void)
     ExtCommandDesc* Desc = m_Commands;
     while (Desc)
     {
-        ULONG NameLen = strlen(Desc->m_Name);
+        ULONG NameLen = (ULONG)strlen(Desc->m_Name);
         OutWrap("  !%s%*c- ",
                 Desc->m_Name,
                 m_LongestCommandName - NameLen + 1, ' ');
@@ -4367,7 +4367,7 @@ ExtRemoteTyped::ErtIoctl(_In_ PCSTR Message,
         StrBufferChars * sizeof(*StrBuffer);
     if (InStr)
     {
-        ExtDataBytes += (strlen(InStr) + 1) * sizeof(*InStr);
+        ExtDataBytes += (ULONG)((strlen(InStr) + 1) * sizeof(*InStr));
     }
 
     ExtData = (EXT_TYPED_DATA*)DataHolder.Get(ExtDataBytes);
